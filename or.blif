@@ -1,0 +1,10 @@
+.model Function
+
+.inputs A B
+.outputs X
+
+.names A B X
+11 1
+10 1
+01 1
+.end
