@@ -122,14 +122,8 @@ class TestQuineMcCluskey(unittest.TestCase):
         result = quine_mccluskey(minterms)
         self.assertCountEqual(result, expected_solution)
 
-    # def test_read_pla_file(self):
-    #     filename = "ex.pla"
-    #     expected_solution = {'inputs': 4, 'outputs': 1, 'terms': {'1': ['0001', '0011', '0101', '0111', '1001'], '-': ['0110', '1100', '1101']}}
-    #     result = read_pla_file(filename)
-    #     self.assertDictEqual(result, expected_solution)
-
     def test_read_pla_file2(self):
-        inputfile = "8inputs.pla"
+        inputfile = "./input_examples/8inputs.pla"
         inputs = read_pla_file(inputfile)
         minterms = inputs["terms"]["1"]
         dc = inputs["terms"]["-"]

@@ -157,7 +157,7 @@ def __main__(filename=None):
     pla_content = read_pla_file(pla_file)
     minimized = quine_mccluskey(pla_content["terms"]["1"], pla_content["terms"]["-"])
     generate_pla(pla_content["input_labels"], pla_content["output_labels"], minimized, "output.pla")
-    print(minimized)
+    # print(minimized)
     return minimized
 
     
