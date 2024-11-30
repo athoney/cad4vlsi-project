@@ -1,8 +1,4 @@
-from itertools import combinations
-
-def hamming_distance(bin1, bin2):
-    """Calculate the Hamming distance between two binary strings."""
-    return sum(b1 != b2 for b1, b2 in zip(bin1, bin2))
+import itertools
 
 def combine_terms(term1, term2):
     """Combine two binary terms if they differ by only one bit."""
@@ -115,7 +111,7 @@ def read_pla_file(filepath):
                 pla_data["input_labels"] = line.split()[1:]
             elif line.startswith(".ob"):
                 pla_data["output_labels"] = line.split()[1]
-            elif not line.startswith("."):
+            elif not line.startswith(".") and not line.startswith("#"):
                 term = line.split()
                 pla_data["terms"][str(term[1])].append(term[0])
     return pla_data
@@ -138,20 +134,34 @@ def generate_pla(input_labels, output_label, minimized_terms, filename):
         f.write(".e\n")
 
 
-def __main__():
-    pla_file = input("Enter a filename: ")
+def expand_terms(terms):
+    """Test helper function ; Expand terms with '-' to all possible combinations."""
+    expanded = []
+    for term in terms:
+        # Generate all combinations for the positions of '-'
+        expanded.extend([
+            ''.join(bits)
+            for bits in itertools.product(
+                *[('0', '1') if char == '-' else (char,) for char in term]
+            )
+        ])
+    return expanded
+
+
+
+def __main__(filename=None):
+    if filename:
+        pla_file = filename
+    else:
+        pla_file = input("Enter a filename: ")
     pla_content = read_pla_file(pla_file)
     minimized = quine_mccluskey(pla_content["terms"]["1"], pla_content["terms"]["-"])
     generate_pla(pla_content["input_labels"], pla_content["output_labels"], minimized, "output.pla")
-    print(pla_content)
+    print(minimized)
+    return minimized
+
     
 
 
 
 __main__()
-# Example usage
-# minterms = ['0001', '0011', '0111', '1111']
-# prime_implicants = generate_prime_implicants(minterms)
-# solution = solve_prime_implicant_table(prime_implicants, minterms)
-# print("Prime Implicants:", prime_implicants)
-# print("Minimal Cover:", solution)

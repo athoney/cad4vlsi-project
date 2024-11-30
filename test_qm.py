@@ -1,23 +1,15 @@
 import unittest
 from qm import (
-    hamming_distance,
     combine_terms,
     generate_prime_implicants,
     solve_prime_implicant_table,
     quine_mccluskey,
-    read_pla_file
+    read_pla_file,
+    __main__,
+    expand_terms
 )
 
 class TestQuineMcCluskey(unittest.TestCase):
-
-    def test_hamming_distance(self):
-        self.assertEqual(hamming_distance('0001', '0011'), 1)
-        self.assertEqual(hamming_distance('1010', '1000'), 1)
-        self.assertEqual(hamming_distance('1111', '0000'), 4)
-        self.assertEqual(hamming_distance('1010', '1010'), 0)
-        self.assertEqual(hamming_distance('1111111101111', '1101111101111'), 1)
-        self.assertEqual(hamming_distance('0000000000', '1111111111'), 10)
-        self.assertEqual(hamming_distance('00', '11'), 2)
 
     def test_combine_terms(self):
         self.assertEqual(combine_terms('0001', '0011'), '00-1')
@@ -130,11 +122,32 @@ class TestQuineMcCluskey(unittest.TestCase):
         result = quine_mccluskey(minterms)
         self.assertCountEqual(result, expected_solution)
 
-    def test_read_pla_file(self):
-        filename = "ex.pla"
-        expected_solution = {'inputs': 4, 'outputs': 1, 'terms': {'1': ['0001', '0011', '0101', '0111', '1001'], '-': ['0110', '1100', '1101']}}
-        result = read_pla_file(filename)
-        self.assertDictEqual(result, expected_solution)
+    # def test_read_pla_file(self):
+    #     filename = "ex.pla"
+    #     expected_solution = {'inputs': 4, 'outputs': 1, 'terms': {'1': ['0001', '0011', '0101', '0111', '1001'], '-': ['0110', '1100', '1101']}}
+    #     result = read_pla_file(filename)
+    #     self.assertDictEqual(result, expected_solution)
+
+    def test_read_pla_file2(self):
+        inputfile = "8inputs.pla"
+        inputs = read_pla_file(inputfile)
+        minterms = inputs["terms"]["1"]
+        dc = inputs["terms"]["-"]
+        minimized = __main__(inputfile)
+        onset = expand_terms(minimized)
+
+        # Check if the minterms are a subset of the onset terms
+        self.assertTrue(set(minterms).issubset(set(onset)))
+        # Check that any minterm not covered by the onset terms is a don't care  
+        self.assertTrue((set(minterms).difference(set(onset))).issubset(set(dc)))
+
+    def test_expand_terms1(self):
+        terms = ['1-1', '1-0']
+        expected_result = ['101', '111', '100', '110']
+        result = expand_terms(terms)
+        self.assertCountEqual(result, expected_result)
+
+    
 
 
 if __name__ == '__main__':
