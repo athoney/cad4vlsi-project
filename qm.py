@@ -111,6 +111,8 @@ def read_pla_file(filepath):
                 pla_data["input_labels"] = line.split()[1:]
             elif line.startswith(".ob"):
                 pla_data["output_labels"] = line.split()[1]
+            elif line.startswith(".p "):
+                pla_data["p"] = int(line.split()[1])
             elif not line.startswith(".") and not line.startswith("#"):
                 term = line.split()
                 pla_data["terms"][str(term[1])].append(term[0])
@@ -156,7 +158,7 @@ def __main__(filename=None):
         pla_file = input("Enter a filename: ")
     pla_content = read_pla_file(pla_file)
     minimized = quine_mccluskey(pla_content["terms"]["1"], pla_content["terms"]["-"])
-    generate_pla(pla_content["input_labels"], pla_content["output_labels"], minimized, "output.pla")
+    generate_pla(pla_content["input_labels"], pla_content["output_labels"], minimized, f"{pla_content['inputs']}output.pla")
     # print(minimized)
     return minimized
 
@@ -164,4 +166,4 @@ def __main__(filename=None):
 
 
 
-__main__()
+# __main__()

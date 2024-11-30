@@ -122,9 +122,10 @@ class TestQuineMcCluskey(unittest.TestCase):
         result = quine_mccluskey(minterms)
         self.assertCountEqual(result, expected_solution)
 
-    def test_read_pla_file2(self):
+    def test_qm8(self):
         inputfile = "./input_examples/8inputs.pla"
         inputs = read_pla_file(inputfile)
+        outputs = read_pla_file('./output_examples/i8eqn.pla')['p']
         minterms = inputs["terms"]["1"]
         dc = inputs["terms"]["-"]
         minimized = __main__(inputfile)
@@ -134,6 +135,40 @@ class TestQuineMcCluskey(unittest.TestCase):
         self.assertTrue(set(minterms).issubset(set(onset)))
         # Check that any minterm not covered by the onset terms is a don't care  
         self.assertTrue((set(minterms).difference(set(onset))).issubset(set(dc)))
+        # Check that the number of implicants in the minized function is equal to the number of implicants in the output file
+        self.assertEqual(len(minimized), outputs)
+
+    def test_qm9(self):
+        inputfile = "./input_examples/9inputs.pla"
+        inputs = read_pla_file(inputfile)
+        outputs = read_pla_file('./output_examples/i9eqn.pla')['p']
+        minterms = inputs["terms"]["1"]
+        dc = inputs["terms"]["-"]
+        minimized = __main__(inputfile)
+        onset = expand_terms(minimized)
+
+        # Check if the minterms are a subset of the onset terms
+        self.assertTrue(set(minterms).issubset(set(onset)))
+        # Check that any minterm not covered by the onset terms is a don't care  
+        self.assertTrue((set(minterms).difference(set(onset))).issubset(set(dc)))
+        # Check that the number of implicants in the minized function is equal to the number of implicants in the output file
+        self.assertEqual(len(minimized), outputs)
+
+    def test_qm10(self):
+        inputfile = "./input_examples/10inputs.pla"
+        inputs = read_pla_file(inputfile)
+        outputs = read_pla_file('./output_examples/i10eqn.pla')['p']
+        minterms = inputs["terms"]["1"]
+        dc = inputs["terms"]["-"]
+        minimized = __main__(inputfile)
+        onset = expand_terms(minimized)
+
+        # Check if the minterms are a subset of the onset terms
+        self.assertTrue(set(minterms).issubset(set(onset)))
+        # Check that any minterm not covered by the onset terms is a don't care  
+        self.assertTrue((set(minterms).difference(set(onset))).issubset(set(dc)))
+        # Check that the number of implicants in the minized function is equal to the number of implicants in the output file
+        self.assertEqual(len(minimized), outputs)
 
     def test_expand_terms1(self):
         terms = ['1-1', '1-0']
