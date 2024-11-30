@@ -4,6 +4,8 @@ from qm import (
     combine_terms,
     generate_prime_implicants,
     solve_prime_implicant_table,
+    quine_mccluskey,
+    read_pla_file
 )
 
 class TestQuineMcCluskey(unittest.TestCase):
@@ -90,6 +92,50 @@ class TestQuineMcCluskey(unittest.TestCase):
         expected_solution = ['000-00', '0011-1', '111111']
         result = solve_prime_implicant_table(expected_primes, minterms)
         self.assertCountEqual(result, expected_solution)
+
+    def test_quine_mccluskeyB2(self):
+        minterms = ['00', '01', '10']
+        expected_solution = ['0-', '-0']
+        result = quine_mccluskey(minterms)
+        self.assertCountEqual(result, expected_solution)
+
+    def test_quine_mccluskeyB3(self):
+        minterms = ['000', '001', '111', '101']
+        expected_solution = ['00-', '1-1']
+        result = quine_mccluskey(minterms)
+        self.assertCountEqual(result, expected_solution)
+
+    def test_quine_mccluskeyB4(self):
+        minterms = ['1000', '1010', '1011', '0111', '1111']
+        expected_solution = ['-111', '10-0', '101-']
+        result = quine_mccluskey(minterms)
+        self.assertIn(sorted(result), [sorted(expected_solution), sorted(['-111', '1-11', '10-0'])])
+
+    def test_quine_mccluskeyB4dc(self):
+        minterms = ['0000', '0101', '1100', '1001']
+        dc = ['0001', '0100', '1101', '1000']
+        expected_solution = ['--0-']
+        result = quine_mccluskey(minterms,dc)
+        self.assertCountEqual(result, expected_solution)
+
+    def test_quine_mccluskeyB5(self):
+        minterms = ['00000', '00001', '00010', '00100', '01000', '10000', '00101', '01001', '10001', '10010', '10100', '11000', '01011', '01101', '01110', '10011', '11001']
+        expected_solution = ['--00-', '-00-0', '-0-00', '0--01', '100--', '010-1','01110']
+        result = quine_mccluskey(minterms)
+        self.assertCountEqual(result, expected_solution)
+    
+    def test_quine_mccluskeyB6(self):
+        minterms = ['000000', '000100','001101', '001111', '111111']
+        expected_solution = ['000-00', '0011-1', '111111']
+        result = quine_mccluskey(minterms)
+        self.assertCountEqual(result, expected_solution)
+
+    def test_read_pla_file(self):
+        filename = "ex.pla"
+        expected_solution = {'inputs': 4, 'outputs': 1, 'terms': {'1': ['0001', '0011', '0101', '0111', '1001'], '-': ['0110', '1100', '1101']}}
+        result = read_pla_file(filename)
+        self.assertDictEqual(result, expected_solution)
+
 
 if __name__ == '__main__':
     unittest.main()

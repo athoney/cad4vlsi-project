@@ -1,0 +1,13 @@
+# Benchmark "i7" written by ABC on Tue Nov 26 12:34:22 2024
+.i 7
+.o 1
+.ilb A B C D E F G
+.ob Z
+.p 6
+- 00-0001 1
+- 00-0100 1
+- 0-00001 1
+- 1001000 1
+- 1010010 1
+- 1111101 1
+.e
